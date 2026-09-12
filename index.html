@@ -1,0 +1,702 @@
+<!DOCTYPE html>  <html lang="hi">  <head>  
+    <meta charset="UTF-8">  <!-- Google Search Console Verification -->  
+<meta  
+    name="google-site-verification"  
+    content="TBf78DeKUJ0NTUcuJ3A2cBD2aluyIjHQ8ouKlU5b0PI"  
+>  
+
+<!-- Mobile -->  
+<meta  
+    name="viewport"  
+    content="width=device-width, initial-scale=1.0"  
+>  
+
+<!-- SEO Title -->  
+<title>Aivora AI — Intelligent AI Assistant by Nexa</title>  
+
+<!-- SEO Description -->  
+<meta  
+    name="description"  
+    content="Aivora AI by Nexa is an intelligent AI assistant for questions, learning, writing, coding and everyday tasks in Hindi and English."  
+>  
+
+<!-- Search Engine -->  
+<meta  
+    name="robots"  
+    content="index, follow, max-image-preview:large"  
+>  
+
+<!-- Author -->  
+<meta  
+    name="author"  
+    content="Nexa"  
+>  
+
+<!-- Keywords -->  
+<meta  
+    name="keywords"  
+    content="Aivora, Aivora AI, AI assistant, AI chatbot, Hindi AI, English AI, Nexa AI, coding AI, learning AI"  
+>  
+
+<!-- Canonical -->  
+<link  
+    rel="canonical"  
+    href="https://aivora-web.amanmaurya5172.workers.dev/"  
+>  
+
+<!-- Open Graph / Social Sharing -->  
+<meta  
+    property="og:type"  
+    content="website"  
+>  
+
+<meta  
+    property="og:title"  
+    content="Aivora AI — Intelligent AI Assistant by Nexa"  
+>  
+
+<meta  
+    property="og:description"  
+    content="Ask questions, learn, write and get coding help with Aivora AI by Nexa."  
+>  
+
+<meta  
+    property="og:url"  
+    content="https://aivora-web.amanmaurya5172.workers.dev/"  
+>  
+
+<meta  
+    property="og:site_name"  
+    content="Aivora"  
+>  
+
+<!-- Twitter / X -->  
+<meta  
+    name="twitter:card"  
+    content="summary"  
+>  
+
+<meta  
+    name="twitter:title"  
+    content="Aivora AI — Intelligent AI Assistant"  
+>  
+
+<meta  
+    name="twitter:description"  
+    content="Aivora AI by Nexa — ask, learn, write and code in Hindi or English."  
+>  
+
+<!-- Theme -->  
+<meta  
+    name="theme-color"  
+    content="#000000"  
+>  
+
+<!-- Stylesheet -->  
+<link  
+    rel="stylesheet"  
+    href="style.css"  
+>
+
+  <link rel="manifest" href="manifest.json">  
+<meta name="mobile-web-app-capable" content="yes">  
+  <meta name="theme-color" content="#000000">  
+</head>  <body>  
+  <aside id="chatSidebar" class="chat-sidebar">  <div class="sidebar-header">  
+    <button id="sidebarNewChatBtn">  
+        ＋ New chat  
+    </button>  
+</div>  
+
+<div class="chat-history">  
+    <div class="history-title">Recent chats</div>  
+    <div id="chatHistory"></div>  
+</div>  
+
+<div class="sidebar-footer">  
+
+    <button  
+type="button"  
+id="sidebarProfileBtn"
+
+> 
+
+<svg  
+    viewBox="0 0 24 24"  
+    width="20"  
+    height="20"  
+    fill="none"  
+    stroke="currentColor"  
+    stroke-width="2"  
+    stroke-linecap="round"  
+    stroke-linejoin="round"  
+>  
+    <circle  
+        cx="12"  
+        cy="8"  
+        r="4"  
+    ></circle>  
+
+    <path  
+        d="M4 21a8 8 0 0 1 16 0"  
+    ></path>  
+</svg>  
+
+<span>Profile</span>  
+    </button>  
+
+    <button  
+type="button"  
+id="sidebarSettingsBtn"
+
+> 
+
+<svg  
+    viewBox="0 0 24 24"  
+    width="20"  
+    height="20"  
+    fill="none"  
+    stroke="currentColor"  
+    stroke-width="2"  
+    stroke-linecap="round"  
+    stroke-linejoin="round"  
+>  
+    <circle  
+        cx="12"  
+        cy="12"  
+        r="3"  
+    ></circle>  
+
+    <path  
+        d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 1.7-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V22h-2.4v-.2a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.7-1.7.06-.06A1.7 1.7 0 0 0 8.4 15a1.7 1.7 0 0 0-1.56-1.03H6v-2.4h.2A1.7 1.7 0 0 0 7.76 10a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.7-1.7.06.06A1.7 1.7 0 0 0 11 6.1a1.7 1.7 0 0 0 1.03-1.56V4h2.4v.2A1.7 1.7 0 0 0 15.46 5.76a1.7 1.7 0 0 0 1.88-.34l.06-.06 1.7 1.7-.06.06A1.7 1.7 0 0 0 18.7 9a1.7 1.7 0 0 0 1.56 1.03h.2v2.4h-.2A1.7 1.7 0 0 0 18.7 14a1.7 1.7 0 0 0 .7 1Z"  
+    ></path>  
+</svg>  
+
+<span>Settings</span>  
+    </button>  
+
+</div>
+
+  </aside>  <!-- =========================  
+     Header  
+========================== -->  
+
+<header class="topbar">  
+  <button  
+type="button"  
+id="menuBtn"  
+class="menu-btn"  
+title="Menu"
+
+> 
+
+☰  
+  </button>  
+
+    <div class="brand">  
+
+        <div class="logo">  
+            <img src="aivora-logo.png" alt="Aivora Logo">  
+        </div>  
+
+        <div>  
+            <h1>ChatAivora</h1>  
+            <p>by Nexa</p>  
+        </div>  
+
+    </div>  
+
+
+    <div class="header-actions">  
+
+    </div>  
+
+</header>  
+
+
+<!-- =========================  
+     Main App  
+========================== -->  
+
+<main class="app">  
+
+    <section  
+        id="welcome"  
+        class="welcome"  
+    >  
+
+        <div class="welcome-logo">  
+             <img src="aivora-logo.png">  
+        </div>  
+
+        <h2>  
+            Welcome to Aivora 👋  
+        </h2>  
+
+        <p>  
+            Your AI assistant by Nexa.  
+            Ask anything in Hindi or English.  
+        </p>  
+      <div class="seo-content">  
+<h2>Meet Aivora AI</h2>  
+
+<p>  
+    Aivora is an AI assistant by Nexa that helps you  
+    ask questions, learn new things, write content,  
+    solve coding problems, and more in Hindi or English.  
+</p>  
+
+<h3>What can Aivora do?</h3>  
+
+<p>  
+    Ask questions, get explanations, learn, write,  
+    brainstorm ideas, and get help with programming.  
+    Aivora is designed to make AI assistance simple  
+    and accessible.  
+</p>  
+      </div>  
+
+
+        <div class="suggestions">  
+
+            <button type="button">  
+                Explain something  
+            </button>  
+
+            <button type="button">  
+                Help me learn  
+            </button>  
+
+            <button type="button">  
+                Write something  
+            </button>  
+
+            <button type="button">  
+                Help with coding  
+            </button>  
+
+        </div>  
+
+    </section>  
+
+
+    <section  
+        id="chatBox"  
+        class="chat-box"  
+    ></section>  
+
+</main>  
+
+
+<!-- =========================  
+     Input  
+========================== -->  
+
+<footer class="input-area">  
+
+    <div class="input-box">  
+
+  <button  
+type="button"  
+id="voiceBtn"  
+title="Voice"  
+aria-label="Voice input"
+
+> 
+
+<svg  
+    viewBox="0 0 24 24"  
+    width="21"  
+    height="21"  
+    fill="none"  
+    stroke="currentColor"  
+    stroke-width="2"  
+    stroke-linecap="round"  
+    stroke-linejoin="round"  
+>  
+    <rect  
+        x="9"  
+        y="2"  
+        width="6"  
+        height="12"  
+        rx="3"  
+    ></rect>  
+
+    <path d="M5 10a7 7 0 0 0 14 0"></path>  
+
+    <path d="M12 19v3"></path>  
+
+    <path d="M8 22h8"></path>  
+</svg>  
+  </button>
+
+<button
+type="button"
+id="attachBtn"
+title="Attach file"
+aria-label="Attach file"
+
+> 
+
+<svg  
+    viewBox="0 0 24 24"  
+    width="21"  
+    height="21"  
+    fill="none"  
+    stroke="currentColor"  
+    stroke-width="2"  
+    stroke-linecap="round"  
+    stroke-linejoin="round"  
+>  
+    <rect  
+        x="3"  
+        y="3"  
+        width="18"  
+        height="18"  
+        rx="3"  
+    ></rect>  
+
+    <circle  
+        cx="8.5"  
+        cy="8.5"  
+        r="1.5"  
+    ></circle>  
+
+    <path  
+        d="M21 15l-5-5L5 21"  
+    ></path>  
+</svg>
+
+</button>  <input
+type="file"
+id="fileInput"
+accept="image/*,.txt,.pdf,.doc,.docx"
+hidden
+
+> 
+
+<textarea  
+            id="messageInput"  
+            placeholder="Message Aivora..."  
+            rows="1"  
+        ></textarea>  
+
+
+    <button  
+type="button"  
+id="sendBtn"  
+title="Send"  
+aria-label="Send message"
+
+> 
+
+<svg  
+    viewBox="0 0 24 24"  
+    width="21"  
+    height="21"  
+    fill="none"  
+    stroke="currentColor"  
+    stroke-width="2"  
+    stroke-linecap="round"  
+    stroke-linejoin="round"  
+>  
+    <path d="M22 2L11 13"></path>  
+    <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>  
+</svg>  
+    </button>  
+
+    </div>  
+
+
+    <p class="footer-text">  
+        Aivora can make mistakes.  
+        Check important information.  
+    </p>  
+
+</footer>  
+
+
+<!-- =========================  
+     Settings Panel  
+========================== -->  
+
+<div  
+    id="settingsOverlay"  
+    class="settings-overlay"  
+>  
+
+    <div class="settings-panel">  
+
+        <div class="settings-header">  
+
+          <h2>
+    <svg viewBox="0 0 24 24" width="22" height="22"
+         fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 1.7-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V22h-2.4v-.2a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.7-1.7.06-.06A1.7 1.7 0 0 0 8.4 15a1.7 1.7 0 0 0-1.56-1.03H6v-2.4h.2A1.7 1.7 0 0 0 7.76 10a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.7-1.7.06.06A1.7 1.7 0 0 0 11 6.1a1.7 1.7 0 0 0 1.03-1.56V4h2.4v.2A1.7 1.7 0 0 0 15.46 5.76a1.7 1.7 0 0 0 1.88-.34l.06-.06 1.7 1.7-.06.06A1.7 1.7 0 0 0 18.7 9a1.7 1.7 0 0 0 1.56 1.03h.2v2.4h-.2A1.7 1.7 0 0 0 18.7 14a1.7 1.7 0 0 0 .7 1Z"></path>
+    </svg>
+    Settings
+          </h2>
+
+            <button  
+                type="button"  
+                id="closeSettingsBtn"  
+            >  
+                ✕  
+            </button>  
+
+        </div>  
+
+
+        <div class="setting-item">  
+
+            <div>  
+
+              <h3>
+    <svg viewBox="0 0 24 24" width="20" height="20"
+         fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true">
+        <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z"></path>
+    </svg>
+    Dark Mode
+              </h3>
+
+                <p>  
+                    Light और Dark theme बदलें  
+                </p>  
+
+            </div>  
+
+
+            <button
+    type="button"
+    id="settingsThemeBtn"
+    title="Toggle theme"
+    aria-label="Toggle theme"
+>
+    <svg
+        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+    >
+        <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z"></path>
+    </svg>
+            </button>
+        </div>  
+
+
+        <div class="setting-item">  
+
+            <div>  
+
+          <h3>
+    <svg viewBox="0 0 24 24" width="20" height="20"
+         fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M3 12h18"></path>
+        <path d="M12 3a14 14 0 0 1 0 18"></path>
+        <path d="M12 3a14 14 0 0 0 0 18"></path>
+    </svg>
+    Language
+          </h3>
+
+                <p>  
+                    AI की भाषा चुनें  
+                </p>  
+
+            </div>  
+
+
+            <select id="languageSelect">  
+
+                <option value="hi">  
+                    हिन्दी  
+                </option>  
+
+                <option value="en">  
+                    English  
+                </option>  
+
+            </select>  
+
+        </div>  
+      <div class="setting-item">  
+
+<div>  
+    <h3>
+    <svg viewBox="0 0 24 24" width="20" height="20"
+         fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true">
+        <path d="M3 6h18"></path>
+        <path d="M8 6V4h8v2"></path>
+        <path d="M19 6l-1 15H6L5 6"></path>
+        <path d="M10 11v6"></path>
+        <path d="M14 11v6"></path>
+    </svg>
+    Clear Chat
+    </h3>
+    <p>सभी saved chats हटाएँ</p>  
+</div>  
+
+<button  
+    type="button"  
+    id="clearChatBtn"  
+>  
+    Clear  
+</button>  
+
+      </div>  
+
+
+        <div class="settings-footer">  
+            Aivora — by Nexa  
+        </div>  
+
+    </div>  
+
+</div>
+
+  
+    </div>  
+<!-- LOGIN / SIGNUP OVERLAY -->
+<div id="authOverlay" class="auth-overlay">
+
+    <div class="auth-box">
+
+        <button id="closeAuthBtn" class="auth-close" aria-label="Close">
+            <svg viewBox="0 0 24 24" width="22" height="22">
+                <path d="M6 6L18 18M18 6L6 18"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"/>
+            </svg>
+        </button>
+
+        <!-- LOGIN -->
+        <div id="loginSection">
+
+            <div class="auth-logo">
+                <img src="aivora-logo.png" alt="Aivora">
+            </div>
+
+            <h2>Welcome back</h2>
+            <p class="auth-subtitle">Login to continue using Aivora</p>
+
+            <form id="loginForm">
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="auth-submit">
+                    Login
+                </button>
+
+                <p id="loginMessage" class="auth-message"></p>
+
+            </form>
+
+            <p class="auth-switch">
+                Don't have an account?
+                <button type="button" id="showSignupBtn">
+                    Sign up
+                </button>
+            </p>
+
+        </div>
+
+
+        <!-- SIGNUP -->
+        <div id="signupSection" class="hidden">
+
+            <div class="auth-logo">
+                <img src="aivora-logo.png" alt="Aivora">
+            </div>
+
+            <h2>Create account</h2>
+            <p class="auth-subtitle">Create your Aivora account</p>
+
+            <form id="signupForm">
+
+                <div class="input-group">
+                    <label>Name</label>
+                    <input
+                        type="text"
+                        id="signupName"
+                        placeholder="Enter your name"
+                        required
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        id="signupEmail"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input
+                        type="password"
+                        id="signupPassword"
+                        placeholder="Minimum 6 characters"
+                        minlength="6"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="auth-submit">
+                    Create account
+                </button>
+
+                <p id="signupMessage" class="auth-message"></p>
+
+            </form>
+
+            <p class="auth-switch">
+                Already have an account?
+                <button type="button" id="showLoginBtn">
+                    Login
+                </button>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>   
+</body> 
+</html>
