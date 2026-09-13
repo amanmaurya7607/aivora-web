@@ -2,7 +2,6 @@
 // AIVORA AI - MAIN APP.JS
 // ==========================================
 
-
 // ==========================================
 // CONFIG
 // ==========================================
@@ -10,375 +9,188 @@
 const AI_WORKER_URL =
     "https://chataivora-ai.amanmaurya5172.workers.dev/api/chat";
 
+const AUTH_API =
+    "https://chataivora-ai.amanmaurya5172.workers.dev/api/auth";
+
 const HISTORY_KEY = "aivora_chat_history";
 const CHATS_KEY = "aivora_all_chats";
 const THEME_KEY = "aivora_theme";
 const LANGUAGE_KEY = "aivora_language";
 
-const PROFILE_NAME_KEY =
-    "aivora_profile_name";
+const PROFILE_NAME_KEY = "aivora_profile_name";
+const PROFILE_IMAGE_KEY = "aivora_profile_image";
 
-const PROFILE_IMAGE_KEY =
-    "aivora_profile_image";
+const AUTH_USER_KEY = "aivora_user";
 
-const AUTH_USER_KEY =
-    "aivora_user";
-
-let currentChatId =
-    Date.now().toString();
-
-let recognition = null;
+let currentChatId = Date.now().toString();
 
 
 // ==========================================
-// ELEMENTS
+// DOM HELPER
 // ==========================================
 
-const input =
-    document.getElementById("messageInput");
+function $(id) {
+    return document.getElementById(id);
+}
 
-const sendBtn =
-    document.getElementById("sendBtn");
-
-const chatBox =
-    document.getElementById("chatBox");
-
-const welcome =
-    document.getElementById("welcome");
-
-const newChatBtn =
-    document.getElementById("newChatBtn");
-
-const sidebarNewChatBtn =
-    document.getElementById(
-        "sidebarNewChatBtn"
-    );
-
-const menuBtn =
-    document.getElementById("menuBtn");
-
-const chatSidebar =
-    document.getElementById(
-        "chatSidebar"
-    );
-
-const chatHistory =
-    document.getElementById(
-        "chatHistory"
-    );
-
-const searchBtn =
-    document.getElementById("searchBtn");
-
-const searchBox =
-    document.getElementById("searchBox");
-
-const searchInput =
-    document.getElementById(
-        "searchInput"
-    );
-
-const closeSearchBtn =
-    document.getElementById(
-        "closeSearchBtn"
-    );
-
-const clearChatBtn =
-    document.getElementById(
-        "clearChatBtn"
-    );
-
-const voiceBtn =
-    document.getElementById("voiceBtn");
-
-const attachBtn =
-    document.getElementById("attachBtn");
-
-const fileInput =
-    document.getElementById("fileInput");
-
-
-// ==========================================
-// PROFILE ELEMENTS
-// ==========================================
-
-const profileBtn =
-    document.getElementById(
-        "profileBtn"
-    );
-
-const sidebarProfileBtn =
-    document.getElementById(
-        "sidebarProfileBtn"
-    );
-
-const profileOverlay =
-    document.getElementById(
-        "profileOverlay"
-    );
-
-const closeProfileBtn =
-    document.getElementById(
-        "closeProfileBtn"
-    );
-
-const profileName =
-    document.getElementById(
-        "profileName"
-    );
-
-const profileAvatar =
-    document.getElementById(
-        "profileAvatar"
-    );
-
-const changePhotoBtn =
-    document.getElementById(
-        "changePhotoBtn"
-    );
-
-const profileImageInput =
-    document.getElementById(
-        "profileImageInput"
-    );
-
-const saveProfileBtn =
-    document.getElementById(
-        "saveProfileBtn"
-    );
-
-const openLoginBtn =
-    document.getElementById(
-        "openLoginBtn"
-    );
-
-
-// ==========================================
-// SETTINGS
-// ==========================================
-
-const themeBtn =
-    document.getElementById("themeBtn");
-
-const settingsBtn =
-    document.getElementById(
-        "settingsBtn"
-    );
-
-const sidebarSettingsBtn =
-    document.getElementById(
-        "sidebarSettingsBtn"
-    );
-
-const settingsOverlay =
-    document.getElementById(
-        "settingsOverlay"
-    );
-
-const closeSettingsBtn =
-    document.getElementById(
-        "closeSettingsBtn"
-    );
-
-const settingsThemeBtn =
-    document.getElementById(
-        "settingsThemeBtn"
-    );
-
-const languageSelect =
-    document.getElementById(
-        "languageSelect"
-    );
-
-
-
-// ==========================================
-// LOGIN / SIGNUP - D1 DATABASE
-// ==========================================
-
-const AUTH_API =
-    "https://chataivora-ai.amanmaurya5172.workers.dev/api/auth";
-
-
-// ==========================================
-// SHOW SIGNUP
-// ==========================================
-
-if (showSignupBtn) {
-
-    showSignupBtn.addEventListener(
-        "click",
-        function () {
-
-            loginForm.style.display = "none";
-            signupForm.style.display = "block";
-
-        }
-    );
-
+function on(element, event, handler) {
+    if (element) {
+        element.addEventListener(event, handler);
+    }
 }
 
 
 // ==========================================
-// SHOW LOGIN
+// DOM ELEMENTS
 // ==========================================
 
-if (showLoginBtn) {
+const chatSidebar = $("chatSidebar");
+const sidebarNewChatBtn = $("sidebarNewChatBtn");
+const chatHistory = $("chatHistory");
+const sidebarProfileBtn = $("sidebarProfileBtn");
+const sidebarSettingsBtn = $("sidebarSettingsBtn");
 
-    showLoginBtn.addEventListener(
-        "click",
-        function () {
+const menuBtn = $("menuBtn");
 
-            signupForm.style.display = "none";
-            loginForm.style.display = "block";
+const welcome = $("welcome");
+const chatBox = $("chatBox");
 
+const voiceBtn = $("voiceBtn");
+const attachBtn = $("attachBtn");
+const fileInput = $("fileInput");
+const messageInput = $("messageInput");
+const sendBtn = $("sendBtn");
+
+const settingsOverlay = $("settingsOverlay");
+const closeSettingsBtn = $("closeSettingsBtn");
+const settingsThemeBtn = $("settingsThemeBtn");
+const languageSelect = $("languageSelect");
+const clearChatBtn = $("clearChatBtn");
+
+const authOverlay = $("authOverlay");
+const closeAuthBtn = $("closeAuthBtn");
+
+const loginSection = $("loginSection");
+const loginForm = $("loginForm");
+const loginEmail = $("loginEmail");
+const loginPassword = $("loginPassword");
+const loginMessage = $("loginMessage");
+const showSignupBtn = $("showSignupBtn");
+
+const signupSection = $("signupSection");
+const signupForm = $("signupForm");
+const signupName = $("signupName");
+const signupEmail = $("signupEmail");
+const signupPassword = $("signupPassword");
+const signupMessage = $("signupMessage");
+const showLoginBtn = $("showLoginBtn");
+
+
+// ==========================================
+// AUTH
+// ==========================================
+
+function getLoggedInUser() {
+    try {
+        const user = localStorage.getItem(AUTH_USER_KEY);
+
+        if (!user) {
+            return null;
         }
-    );
 
+        return JSON.parse(user);
+    } catch (error) {
+        console.error("Auth data error:", error);
+        return null;
+    }
+}
+
+
+function isLoggedIn() {
+    return !!getLoggedInUser();
+}
+
+
+function saveLoggedInUser(user) {
+    localStorage.setItem(
+        AUTH_USER_KEY,
+        JSON.stringify(user)
+    );
+}
+
+
+function logoutUser() {
+    localStorage.removeItem(AUTH_USER_KEY);
+
+    alert("You have been logged out.");
+
+    closeAuth();
 }
 
 
 // ==========================================
-// SIGNUP
+// AUTH OVERLAY
 // ==========================================
 
-if (signupBtn) {
+function openAuth() {
+    if (!authOverlay) return;
 
-    signupBtn.addEventListener(
-        "click",
-        async function () {
+    authOverlay.classList.add("show");
 
-            const name =
-                signupName.value.trim();
+    showLogin();
 
-            const email =
-                signupEmail.value.trim().toLowerCase();
-
-            const password =
-                signupPassword.value;
+    if (loginEmail) {
+        loginEmail.focus();
+    }
+}
 
 
-            if (!name || !email || !password) {
+function closeAuth() {
+    if (!authOverlay) return;
 
-                alert(
-                    "कृपया सभी जानकारी भरें।"
-                );
-
-                return;
-
-            }
+    authOverlay.classList.remove("show");
+}
 
 
-            if (password.length < 6) {
+function showLogin() {
+    if (loginSection) {
+        loginSection.classList.remove("hidden");
+    }
 
-                alert(
-                    "Password कम से कम 6 characters का होना चाहिए।"
-                );
+    if (signupSection) {
+        signupSection.classList.add("hidden");
+    }
 
-                return;
+    if (loginMessage) {
+        loginMessage.textContent = "";
+    }
 
-            }
-
-
-            signupBtn.disabled = true;
-
-            const oldText =
-                signupBtn.textContent;
-
-            signupBtn.textContent =
-                "Creating...";
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        `${AUTH_API}/signup`,
-                        {
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                name,
-                                email,
-                                password
-                            })
-                        }
-                    );
+    if (signupMessage) {
+        signupMessage.textContent = "";
+    }
+}
 
 
-                const data =
-                    await response.json();
+function showSignup() {
+    if (loginSection) {
+        loginSection.classList.add("hidden");
+    }
 
+    if (signupSection) {
+        signupSection.classList.remove("hidden");
+    }
 
-                if (!response.ok || !data.success) {
+    if (loginMessage) {
+        loginMessage.textContent = "";
+    }
 
-                    throw new Error(
-                        data.error ||
-                        "Account creation failed"
-                    );
+    if (signupMessage) {
+        signupMessage.textContent = "";
+    }
 
-                }
-
-
-                // SAFE USER DATA ONLY
-                localStorage.setItem(
-                    AUTH_USER_KEY,
-                    JSON.stringify({
-                        id: data.user.id,
-                        name: data.user.name,
-                        email: data.user.email
-                    })
-                );
-
-
-                alert(
-                    "Account बन गया! ✅"
-                );
-
-
-                signupForm.style.display =
-                    "none";
-
-                loginForm.style.display =
-                    "block";
-
-                loginEmail.value =
-                    email;
-
-                loginPassword.value =
-                    "";
-
-
-            } catch (error) {
-
-                console.error(
-                    "Signup error:",
-                    error
-                );
-
-                alert(
-                    error.message ||
-                    "Account create नहीं हो पाया।"
-                );
-
-            } finally {
-
-                signupBtn.disabled =
-                    false;
-
-                signupBtn.textContent =
-                    oldText;
-
-            }
-
-        }
-    );
-
+    if (signupName) {
+        signupName.focus();
+    }
 }
 
 
@@ -386,613 +198,562 @@ if (signupBtn) {
 // LOGIN
 // ==========================================
 
-if (loginBtn) {
+on(loginForm, "submit", async function (event) {
 
-    loginBtn.addEventListener(
-        "click",
-        async function () {
+    event.preventDefault();
 
-            const email =
-                loginEmail.value.trim().toLowerCase();
+    const email = loginEmail?.value.trim().toLowerCase();
+    const password = loginPassword?.value || "";
 
-            const password =
-                loginPassword.value;
+    if (!email || !password) {
 
-
-            if (!email || !password) {
-
-                alert(
-                    "Email और Password भरें।"
-                );
-
-                return;
-
-            }
-
-
-            loginBtn.disabled = true;
-
-            const oldText =
-                loginBtn.textContent;
-
-            loginBtn.textContent =
-                "Logging in...";
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        `${AUTH_API}/login`,
-                        {
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                email,
-                                password
-                            })
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                if (!response.ok || !data.success) {
-
-                    throw new Error(
-                        data.error ||
-                        "Login failed"
-                    );
-
-                }
-
-
-                // SAFE USER DATA ONLY
-                localStorage.setItem(
-                    AUTH_USER_KEY,
-                    JSON.stringify({
-                        id: data.user.id,
-                        name: data.user.name,
-                        email: data.user.email
-                    })
-                );
-
-
-                alert(
-                    "Login successful! ✅"
-                );
-
-
-                if (authOverlay) {
-
-                    authOverlay.classList.remove(
-                        "show"
-                    );
-
-                }
-
-
-                // UPDATE PROFILE
-
-                if (profileName) {
-
-                    profileName.value =
-                        data.user.name;
-
-                }
-
-
-                if (profileAvatar) {
-
-                    const savedImage =
-                        localStorage.getItem(
-                            PROFILE_IMAGE_KEY
-                        );
-
-                    if (!savedImage) {
-
-                        profileAvatar.textContent =
-                            data.user.name
-                                .charAt(0)
-                                .toUpperCase();
-
-                    }
-
-                }
-
-
-            } catch (error) {
-
-                console.error(
-                    "Login error:",
-                    error
-                );
-
-                alert(
-                    error.message ||
-                    "Login नहीं हो पाया।"
-                );
-
-            } finally {
-
-                loginBtn.disabled =
-                    false;
-
-                loginBtn.textContent =
-                    oldText;
-
-            }
-
-        }
-    );
-
-}
-
-
-// ==========================================
-// CLOSE LOGIN / SIGNUP
-// ==========================================
-
-if (closeAuthBtn) {
-
-    closeAuthBtn.addEventListener(
-        "click",
-        function () {
-
-            if (authOverlay) {
-
-                authOverlay.classList.remove(
-                    "show"
-                );
-
-            }
-
-        }
-    );
-
-}
-
-
-// ==========================================
-// OPEN LOGIN
-// ==========================================
-
-if (openLoginBtn) {
-
-    openLoginBtn.addEventListener(
-        "click",
-        function () {
-
-            if (profileOverlay) {
-
-                profileOverlay.classList.remove(
-                    "show"
-                );
-
-            }
-
-
-            if (authOverlay) {
-
-                authOverlay.classList.add(
-                    "show"
-                );
-
-            }
-
-        }
-    );
-
-}
-// ==========================================
-// AIVORA MARKDOWN RENDERER
-// ==========================================
-
-function escapeHTML(text) {
-    return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-function formatAIMessage(text) {
-
-    // ======================================
-    // ESCAPE HTML
-    // ======================================
-
-    let html = escapeHTML(text);
-
-    const codeBlocks = [];
-
-    // ======================================
-    // SAVE CODE BLOCKS
-    // ======================================
-
-    html = html.replace(
-        /```([a-zA-Z0-9_-]*)\n?([\s\S]*?)```/g,
-        function (_, language, code) {
-
-            const index = codeBlocks.length;
-
-            codeBlocks.push({
-                language: language || "",
-                code: code.trim()
-            });
-
-            return `@@AIVORA_CODE_${index}@@`;
-        }
-    );
-
-
-    // ======================================
-    // INLINE CODE
-    // ======================================
-
-    html = html.replace(
-        /`([^`\n]+)`/g,
-        "<code>$1</code>"
-    );
-
-
-    // ======================================
-    // BOLD
-    // ======================================
-
-    html = html.replace(
-        /\*\*(.+?)\*\*/g,
-        "<strong>$1</strong>"
-    );
-
-
-    // ======================================
-    // ITALIC
-    // ======================================
-
-    html = html.replace(
-        /(?<!\*)\*([^*\n]+)\*(?!\*)/g,
-        "<em>$1</em>"
-    );
-
-
-    // ======================================
-    // SPLIT INTO LINES
-    // ======================================
-
-    const lines = html.split("\n");
-
-    let result = "";
-    let inUl = false;
-    let inOl = false;
-
-
-    // ======================================
-    // PROCESS EVERY LINE
-    // ======================================
-
-    lines.forEach(function (line) {
-
-        const trimmed = line.trim();
-
-
-        // EMPTY LINE
-
-        if (!trimmed) {
-
-            if (inUl) {
-                result += "</ul>";
-                inUl = false;
-            }
-
-            if (inOl) {
-                result += "</ol>";
-                inOl = false;
-            }
-
-            return;
+        if (loginMessage) {
+            loginMessage.textContent =
+                "Email aur password dono enter karo.";
         }
 
-
-        // H1
-
-        if (/^# (.+)/.test(trimmed)) {
-
-            if (inUl) {
-                result += "</ul>";
-                inUl = false;
-            }
-
-            if (inOl) {
-                result += "</ol>";
-                inOl = false;
-            }
-
-            result +=
-                "<h1>" +
-                trimmed.replace(/^# /, "") +
-                "</h1>";
-
-            return;
-        }
-
-
-        // H2
-
-        if (/^## (.+)/.test(trimmed)) {
-
-            if (inUl) {
-                result += "</ul>";
-                inUl = false;
-            }
-
-            if (inOl) {
-                result += "</ol>";
-                inOl = false;
-            }
-
-            result +=
-                "<h2>" +
-                trimmed.replace(/^## /, "") +
-                "</h2>";
-
-            return;
-        }
-
-
-        // H3
-
-        if (/^### (.+)/.test(trimmed)) {
-
-            if (inUl) {
-                result += "</ul>";
-                inUl = false;
-            }
-
-            if (inOl) {
-                result += "</ol>";
-                inOl = false;
-            }
-
-            result +=
-                "<h3>" +
-                trimmed.replace(/^### /, "") +
-                "</h3>";
-
-            return;
-        }
-
-
-        // BULLET LIST
-
-        if (/^[-*] (.+)/.test(trimmed)) {
-
-            if (inOl) {
-                result += "</ol>";
-                inOl = false;
-            }
-
-            if (!inUl) {
-                result += "<ul>";
-                inUl = true;
-            }
-
-            result +=
-                "<li>" +
-                trimmed.replace(/^[-*] /, "") +
-                "</li>";
-
-            return;
-        }
-
-
-        // NUMBERED LIST
-
-        if (/^\d+\. (.+)/.test(trimmed)) {
-
-            if (inUl) {
-                result += "</ul>";
-                inUl = false;
-            }
-
-            if (!inOl) {
-                result += "<ol>";
-                inOl = true;
-            }
-
-            result +=
-                "<li>" +
-                trimmed.replace(/^\d+\. /, "") +
-                "</li>";
-
-            return;
-        }
-
-
-        // CLOSE LISTS
-
-        if (inUl) {
-            result += "</ul>";
-            inUl = false;
-        }
-
-        if (inOl) {
-            result += "</ol>";
-            inOl = false;
-        }
-
-
-        // CODE PLACEHOLDER
-
-        if (/^@@AIVORA_CODE_\d+@@$/.test(trimmed)) {
-
-            result += trimmed;
-
-            return;
-        }
-
-
-        // NORMAL PARAGRAPH
-
-        result +=
-            "<p>" +
-            trimmed +
-            "</p>";
-
-    });
-
-
-    // ======================================
-    // CLOSE OPEN LISTS
-    // ======================================
-
-    if (inUl) {
-        result += "</ul>";
+        return;
     }
 
-    if (inOl) {
-        result += "</ol>";
+    const submitButton =
+        loginForm.querySelector('button[type="submit"]');
+
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Logging in...";
     }
 
+    if (loginMessage) {
+        loginMessage.textContent = "Please wait...";
+    }
 
-    // ======================================
-    // RESTORE CODE BLOCKS
-    // ======================================
+    try {
 
-    codeBlocks.forEach(
-        function (block, index) {
+        const response = await fetch(
+            AUTH_API + "/login",
+            {
+                method: "POST",
 
-            const language = block.language
-                ? `<span class="code-language">${block.language}</span>`
-                : "";
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-            const codeHTML = `
-                <div class="aivora-code-wrapper">
-                    <div class="aivora-code-header">
-                        ${language}
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            }
+        );
 
-                        <button
-                            type="button"
-                            class="code-copy-btn"
-                            data-code="${encodeURIComponent(block.code)}"
-                        >
-                            Copy
-                        </button>
-                    </div>
+        const data = await response.json()
+            .catch(() => ({}));
 
-                    <pre><code>${block.code}</code></pre>
-                </div>
-            `;
+        if (!response.ok) {
 
-            result = result.replace(
-                `@@AIVORA_CODE_${index}@@`,
-                codeHTML
+            throw new Error(
+                data.error ||
+                data.message ||
+                "Login failed."
             );
-
         }
+
+        const user =
+            data.user ||
+            {
+                name: data.name || "",
+                email: email
+            };
+
+        saveLoggedInUser(user);
+
+        if (loginMessage) {
+            loginMessage.textContent =
+                "Login successful.";
+        }
+
+        setTimeout(() => {
+            closeAuth();
+        }, 500);
+
+    } catch (error) {
+
+        console.error("Login error:", error);
+
+        if (loginMessage) {
+            loginMessage.textContent =
+                error.message || "Login failed.";
+        }
+
+    } finally {
+
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = "Login";
+        }
+    }
+});
+
+
+// ==========================================
+// SIGNUP
+// ==========================================
+
+on(signupForm, "submit", async function (event) {
+
+    event.preventDefault();
+
+    const name = signupName?.value.trim();
+    const email = signupEmail?.value.trim().toLowerCase();
+    const password = signupPassword?.value || "";
+
+    if (!name || !email || !password) {
+
+        if (signupMessage) {
+            signupMessage.textContent =
+                "Sabhi fields fill karo.";
+        }
+
+        return;
+    }
+
+    if (password.length < 6) {
+
+        if (signupMessage) {
+            signupMessage.textContent =
+                "Password kam se kam 6 characters ka hona chahiye.";
+        }
+
+        return;
+    }
+
+    const submitButton =
+        signupForm.querySelector('button[type="submit"]');
+
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Creating...";
+    }
+
+    if (signupMessage) {
+        signupMessage.textContent =
+            "Account create ho raha hai...";
+    }
+
+    try {
+
+        const response = await fetch(
+            AUTH_API + "/signup",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password
+                })
+            }
+        );
+
+        const data = await response.json()
+            .catch(() => ({}));
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                data.message ||
+                "Signup failed."
+            );
+        }
+
+        if (signupMessage) {
+            signupMessage.textContent =
+                "Account created successfully.";
+        }
+
+        if (loginEmail) {
+            loginEmail.value = email;
+        }
+
+        if (loginPassword) {
+            loginPassword.value = "";
+        }
+
+        setTimeout(() => {
+            showLogin();
+
+            if (loginMessage) {
+                loginMessage.textContent =
+                    "Account created. Ab login karo.";
+            }
+
+            if (loginEmail) {
+                loginEmail.value = email;
+                loginEmail.focus();
+            }
+        }, 700);
+
+    } catch (error) {
+
+        console.error("Signup error:", error);
+
+        if (signupMessage) {
+            signupMessage.textContent =
+                error.message || "Signup failed.";
+        }
+
+    } finally {
+
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = "Create account";
+        }
+    }
+});
+
+
+// ==========================================
+// AUTH BUTTONS
+// ==========================================
+
+on(closeAuthBtn, "click", closeAuth);
+
+on(showSignupBtn, "click", function () {
+    showSignup();
+});
+
+on(showLoginBtn, "click", function () {
+    showLogin();
+});
+
+
+// ==========================================
+// CLOSE AUTH WHEN CLICKING OUTSIDE
+// ==========================================
+
+on(authOverlay, "click", function (event) {
+
+    if (event.target === authOverlay) {
+        closeAuth();
+    }
+});
+
+
+// ==========================================
+// AI CONNECTOR
+// ==========================================
+
+const AIConnector = {
+
+    async ask(text) {
+
+        const user = getLoggedInUser();
+
+        if (!user) {
+            throw new Error("LOGIN_REQUIRED");
+        }
+
+        const messages = [];
+
+        if (chatBox) {
+
+            const messageElements =
+                chatBox.querySelectorAll(".message");
+
+            messageElements.forEach((message) => {
+
+                const isUser =
+                    message.classList.contains("user-message");
+
+                const content =
+                    message.querySelector(".message-content");
+
+                if (!content) return;
+
+                const value =
+                    content.textContent.trim();
+
+                if (!value) return;
+
+                messages.push({
+                    role: isUser
+                        ? "user"
+                        : "assistant",
+
+                    content: value
+                });
+            });
+        }
+
+        const response = await fetch(
+            AI_WORKER_URL,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    message: text,
+
+                    messages:
+                        messages.slice(-20),
+
+                    user: user
+                })
+            }
+        );
+
+        const data = await response.json()
+            .catch(() => ({}));
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                data.message ||
+                "AI request failed."
+            );
+        }
+
+        if (!data.answer) {
+            throw new Error(
+                "AI ne koi answer nahi diya."
+            );
+        }
+
+        return data.answer;
+    }
+};
+
+
+// ==========================================
+// SEND MESSAGE
+// ==========================================
+
+async function sendMessage() {
+
+    if (!messageInput) return;
+
+    const text =
+        messageInput.value.trim();
+
+    if (!text) return;
+
+
+    // LOGIN REQUIRED
+    if (!isLoggedIn()) {
+
+        openAuth();
+
+        if (loginMessage) {
+            loginMessage.textContent =
+                "Aivora use karne ke liye pehle login karo.";
+        }
+
+        return;
+    }
+
+
+    // HIDE WELCOME
+    if (welcome) {
+        welcome.classList.add("hidden");
+    }
+
+
+    // ADD USER MESSAGE
+    addMessage(
+        text,
+        true
     );
 
 
-    return result;
+    // SAVE
+    saveChat();
+
+
+    // CLEAR INPUT
+    messageInput.value = "";
+
+    autoResizeTextarea();
+
+
+    // DISABLE SEND
+    if (sendBtn) {
+        sendBtn.disabled = true;
+    }
+
+
+    // LOADING MESSAGE
+    const loading =
+        createLoadingMessage();
+
+
+    try {
+
+        const answer =
+            await AIConnector.ask(text);
+
+
+        // REMOVE LOADING
+        if (loading) {
+            loading.remove();
+        }
+
+
+        // ADD AI RESPONSE
+        addMessage(
+            answer,
+            false
+        );
+
+
+        // SAVE
+        saveChat();
+
+    } catch (error) {
+
+        console.error("AI Error:", error);
+
+
+        if (loading) {
+            loading.remove();
+        }
+
+
+        if (error.message === "LOGIN_REQUIRED") {
+
+            openAuth();
+
+            if (loginMessage) {
+                loginMessage.textContent =
+                    "Login karke Aivora use karo.";
+            }
+
+            return;
+        }
+
+
+        addMessage(
+            "AI Error: " +
+            (error.message || "Something went wrong."),
+            false
+        );
+
+    } finally {
+
+        if (sendBtn) {
+            sendBtn.disabled = false;
+        }
+
+        messageInput.focus();
+    }
 }
+
+
+// ==========================================
+// SEND BUTTON
+// ==========================================
+
+on(sendBtn, "click", sendMessage);
+
+
+// ==========================================
+// ENTER TO SEND
+// ==========================================
+
+on(messageInput, "keydown", function (event) {
+
+    if (
+        event.key === "Enter" &&
+        !event.shiftKey
+    ) {
+
+        event.preventDefault();
+
+        sendMessage();
+    }
+});
+
+
+// ==========================================
+// AUTO RESIZE TEXTAREA
+// ==========================================
+
+function autoResizeTextarea() {
+
+    if (!messageInput) return;
+
+    messageInput.style.height = "auto";
+
+    messageInput.style.height =
+        Math.min(
+            messageInput.scrollHeight,
+            180
+        ) + "px";
+}
+
+on(
+    messageInput,
+    "input",
+    autoResizeTextarea
+);
+
+
 // ==========================================
 // ADD MESSAGE
 // ==========================================
 
-function addMessage(text, type) {
+function addMessage(text, isUser = false) {
 
-    if (!chatBox) return;
+    if (!chatBox) return null;
 
     const wrapper =
         document.createElement("div");
 
     wrapper.className =
-        type === "user"
-            ? "message-wrapper user-wrapper"
-            : "message-wrapper ai-wrapper";
+        "message-wrapper " +
+        (isUser
+            ? "user-wrapper"
+            : "assistant-wrapper");
 
 
     const message =
         document.createElement("div");
 
     message.className =
-        type === "user"
-            ? "message user-message"
-            : "message ai-message";
+        "message " +
+        (isUser
+            ? "user-message"
+            : "assistant-message");
 
-    if (type === "ai") {
-    message.innerHTML =
-        formatAIMessage(text);
-} else {
-    message.textContent = text;
-}
 
-    wrapper.appendChild(message);
+    const content =
+        document.createElement("div");
 
-// ======================================
-// CODE COPY BUTTONS
-// ======================================
+    content.className =
+        "message-content";
 
-if (type === "ai") {
 
-    message
-        .querySelectorAll(".code-copy-btn")
-        .forEach(button => {
+    // SECURITY:
+    // User/AI text ko directly HTML nahi banate.
+    content.textContent = text;
 
-            button.addEventListener(
-                "click",
-                async function () {
 
-                    try {
+    message.appendChild(content);
 
-                        const code =
-                            decodeURIComponent(
-                                button.dataset.code
-                            );
 
-                        await navigator
-                            .clipboard
-                            .writeText(code);
-
-                        button.textContent =
-                            "Copied!";
-
-                        setTimeout(() => {
-
-                            button.textContent =
-                                "Copy";
-
-                        }, 1200);
-
-                    } catch (error) {
-
-                        console.error(
-                            "Code copy error:",
-                            error
-                        );
-
-                    }
-
-                }
-            );
-
-        });
-
-}
     // ======================================
     // AI ACTION BUTTONS
     // ======================================
 
-    if (type === "ai") {
+    if (!isUser) {
 
         const actions =
             document.createElement("div");
@@ -1002,773 +763,394 @@ if (type === "ai") {
 
 
         // COPY
-
         const copyBtn =
-            document.createElement("button");
-
-        copyBtn.type = "button";
-        copyBtn.title = "Copy";
-
-        copyBtn.innerHTML = `
-        <svg viewBox="0 0 24 24">
-            <rect x="9" y="9"
-                width="11"
-                height="11"
-                rx="2"></rect>
-
-            <path d="
-                M5 15H4
-                a2 2 0 0 1-2-2
-                V4
-                a2 2 0 0 1 2-2
-                h9
-                a2 2 0 0 1 2 2v1
-            "></path>
-        </svg>
-        `;
-
-        copyBtn.addEventListener(
-            "click",
-            async function () {
-
-                try {
-
-                    await navigator.clipboard
-                        .writeText(text);
-
-                    copyBtn.classList.add(
-                        "active"
-                    );
-
-                    setTimeout(() => {
-
-                        copyBtn.classList.remove(
-                            "active"
-                        );
-
-                    }, 1000);
-
-                } catch (error) {
-
-                    console.error(
-                        "Copy error:",
-                        error
-                    );
-
-                }
-
-            }
-        );
+            createIconButton(
+                "Copy",
+                getCopyIcon()
+            );
 
 
         // LIKE
-
         const likeBtn =
-            document.createElement("button");
-
-        likeBtn.type = "button";
-        likeBtn.title = "Like";
-
-        likeBtn.innerHTML = `
-        <svg viewBox="0 0 24 24">
-            <path d="
-                M7 10v10
-                H4
-                a2 2 0 0 1-2-2
-                v-6
-                a2 2 0 0 1 2-2h3Z
-            "></path>
-
-            <path d="
-                M7 20h9.5
-                a2 2 0 0 0 1.9-1.4
-                l2-6
-                A2 2 0 0 0 18.5 10
-                H14
-                l.8-4
-                A3 3 0 0 0 12 2.5
-                L7 10v10Z
-            "></path>
-        </svg>
-        `;
-
-        likeBtn.onclick =
-            function () {
-
-                likeBtn.classList.toggle(
-                    "active"
-                );
-
-                dislikeBtn.classList.remove(
-                    "active"
-                );
-
-            };
+            createIconButton(
+                "Good response",
+                getLikeIcon()
+            );
 
 
         // DISLIKE
-
         const dislikeBtn =
-            document.createElement("button");
-
-        dislikeBtn.type = "button";
-        dislikeBtn.title = "Dislike";
-
-        dislikeBtn.innerHTML = `
-        <svg viewBox="0 0 24 24">
-            <path d="
-                M7 14V4
-                H4
-                a2 2 0 0 0-2 2
-                v6
-                a2 2 0 0 0 2 2h3Z
-            "></path>
-
-            <path d="
-                M7 4h9.5
-                a2 2 0 0 1 1.9 1.4
-                l2 6
-                A2 2 0 0 1 18.5 14
-                H14
-                l.8 4
-                A3 3 0 0 1 12 21.5
-                L7 14V4Z
-            "></path>
-        </svg>
-        `;
-
-        dislikeBtn.onclick =
-            function () {
-
-                dislikeBtn.classList.toggle(
-                    "active"
-                );
-
-                likeBtn.classList.remove(
-                    "active"
-                );
-
-            };
+            createIconButton(
+                "Bad response",
+                getDislikeIcon()
+            );
 
 
         // READ ALOUD
-
-        const soundBtn =
-            document.createElement("button");
-
-        soundBtn.type = "button";
-        soundBtn.title =
-            "Read aloud";
-
-        soundBtn.innerHTML = `
-        <svg viewBox="0 0 24 24">
-            <path d="
-                M11 5
-                L6 9
-                H2
-                v6h4
-                l5 4V5Z
-            "></path>
-
-            <path d="
-                M15.5 8.5
-                a5 5 0 0 1 0 7
-            "></path>
-
-            <path d="
-                M18.5 5.5
-                a9 9 0 0 1 0 13
-            "></path>
-        </svg>
-        `;
-
-        soundBtn.onclick =
-            function () {
-
-                if (
-                    !(
-                        "speechSynthesis"
-                        in window
-                    )
-                ) {
-
-                    alert(
-                        "Read aloud supported नहीं है।"
-                    );
-
-                    return;
-
-                }
-
-                speechSynthesis.cancel();
-
-                const speech =
-                    new SpeechSynthesisUtterance(
-                        text
-                    );
-
-                speech.lang =
-                    languageSelect &&
-                    languageSelect.value === "en"
-                        ? "en-US"
-                        : "hi-IN";
-
-                speech.rate = 1;
-
-                speechSynthesis.speak(
-                    speech
-                );
-
-            };
+        const readBtn =
+            createIconButton(
+                "Read aloud",
+                getVolumeIcon()
+            );
 
 
         // REGENERATE
-
         const regenerateBtn =
-            document.createElement("button");
+            createIconButton(
+                "Regenerate",
+                getRefreshIcon()
+            );
 
-        regenerateBtn.type = "button";
-        regenerateBtn.title =
-            "Regenerate";
 
-        regenerateBtn.innerHTML = `
-        <svg viewBox="0 0 24 24">
-            <path d="
-                M20 11
-                a8 8 0 0 0-14.9-4
-                L3 10
-            "></path>
+        // COPY EVENT
+        on(copyBtn, "click", async function () {
 
-            <path d="
-                M3 5v5h5
-            "></path>
+            try {
 
-            <path d="
-                M4 13
-                a8 8 0 0 0 14.9 4
-                L21 14
-            "></path>
+                await navigator.clipboard.writeText(
+                    text
+                );
 
-            <path d="
-                M21 19v-5h-5
-            "></path>
-        </svg>
-        `;
+                copyBtn.title =
+                    "Copied";
 
-        regenerateBtn.onclick =
+                setTimeout(() => {
+                    copyBtn.title = "Copy";
+                }, 1500);
+
+            } catch (error) {
+
+                fallbackCopy(text);
+
+            }
+        });
+
+
+        // LIKE
+        on(likeBtn, "click", function () {
+
+            likeBtn.classList.add("active");
+
+            dislikeBtn.classList.remove("active");
+        });
+
+
+        // DISLIKE
+        on(dislikeBtn, "click", function () {
+
+            dislikeBtn.classList.add("active");
+
+            likeBtn.classList.remove("active");
+        });
+
+
+        // READ ALOUD
+        on(readBtn, "click", function () {
+
+            speakText(text);
+        });
+
+
+        // REGENERATE
+        on(
+            regenerateBtn,
+            "click",
             function () {
 
-                const users =
-                    chatBox.querySelectorAll(
-                        ".user-message"
-                    );
-
-                if (!users.length) {
-                    return;
-                }
-
-                const lastUser =
-                    users[
-                        users.length - 1
-                    ];
-
-                input.value =
-                    lastUser.textContent;
-
-                sendMessage(true);
-
-            };
-
-
-        actions.appendChild(
-            copyBtn
-        );
-
-        actions.appendChild(
-            likeBtn
-        );
-
-        actions.appendChild(
-            dislikeBtn
-        );
-
-        actions.appendChild(
-            soundBtn
-        );
-
-        actions.appendChild(
-            regenerateBtn
-        );
-
-        wrapper.appendChild(
-            actions
-        );
-
-    }
-
-
-    chatBox.appendChild(
-        wrapper
-    );
-
-
-    wrapper.scrollIntoView({
-        behavior: "smooth",
-        block: "end"
-    });
-
-}
-
-
-// ==========================================
-// GET CONVERSATION
-// ==========================================
-
-function getConversationMessages() {
-
-    const messages = [];
-
-    if (!chatBox) {
-        return messages;
-    }
-
-    chatBox
-        .querySelectorAll(".message")
-        .forEach(message => {
-
-            if (
-                message.dataset.loading ===
-                "true"
-            ) {
-                return;
+                regenerateLastResponse();
             }
+        );
 
-            const role =
-                message.classList.contains(
-                    "user-message"
-                )
-                    ? "user"
-                    : "assistant";
 
-            messages.push({
-                role: role,
-                content:
-                    message.textContent
-            });
+        actions.appendChild(copyBtn);
+        actions.appendChild(likeBtn);
+        actions.appendChild(dislikeBtn);
+        actions.appendChild(readBtn);
+        actions.appendChild(regenerateBtn);
 
-        });
+        message.appendChild(actions);
+    }
 
-    // बहुत ज्यादा history API को नहीं भेजेंगे
 
-    return messages.slice(-20);
+    wrapper.appendChild(message);
 
+    chatBox.appendChild(wrapper);
+
+
+    // SCROLL
+    chatBox.scrollTop =
+        chatBox.scrollHeight;
+
+
+    return wrapper;
 }
 
 
 // ==========================================
-// SEND MESSAGE TO AI
+// LOADING MESSAGE
 // ==========================================
 
-async function sendMessage(
-    isRegenerate = false
+function createLoadingMessage() {
+
+    if (!chatBox) return null;
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.className =
+        "message-wrapper assistant-wrapper";
+
+
+    const message =
+        document.createElement("div");
+
+    message.className =
+        "message assistant-message loading-message";
+
+
+    const content =
+        document.createElement("div");
+
+    content.className =
+        "message-content";
+
+    content.textContent =
+        "Aivora is thinking...";
+
+
+    message.appendChild(content);
+
+    wrapper.appendChild(message);
+
+    chatBox.appendChild(wrapper);
+
+    chatBox.scrollTop =
+        chatBox.scrollHeight;
+
+
+    return wrapper;
+}
+
+
+// ==========================================
+// CREATE ICON BUTTON
+// ==========================================
+
+function createIconButton(
+    title,
+    icon
 ) {
 
-    if (!input) return;
+    const button =
+        document.createElement("button");
 
-    const text =
-        input.value.trim();
+    button.type = "button";
 
-    if (!text) return;
+    button.className =
+        "message-action";
 
+    button.title = title;
 
-    // Welcome hide
-
-    if (welcome) {
-        welcome.style.display =
-            "none";
-    }
-
-
-    // Regenerate में नया user
-    // message दोबारा नहीं दिखाना
-
-    if (!isRegenerate) {
-
-        addMessage(
-            text,
-            "user"
-        );
-
-    }
-
-
-    input.value = "";
-
-    saveChat();
-
-
-    // Disable button
-
-    if (sendBtn) {
-        sendBtn.disabled = true;
-    }
-
-
-    // ======================================
-    // LOADING MESSAGE
-    // ======================================
-
-    const loadingWrapper =
-        document.createElement("div");
-
-    loadingWrapper.className =
-        "message-wrapper ai-wrapper";
-
-
-    const loadingMessage =
-        document.createElement("div");
-
-    loadingMessage.className =
-        "message ai-message";
-
-    loadingMessage.dataset.loading =
-        "true";
-
-    loadingMessage.textContent =
-        "Thinking...";
-
-
-    loadingWrapper.appendChild(
-        loadingMessage
+    button.setAttribute(
+        "aria-label",
+        title
     );
 
-    chatBox.appendChild(
-        loadingWrapper
-    );
+    button.innerHTML = icon;
 
-    loadingWrapper.scrollIntoView({
-        behavior: "smooth",
-        block: "end"
-    });
-
-
-    try {
-
-        const messages =
-            getConversationMessages();
-
-
-        // ==================================
-        // CALL CLOUDFLARE WORKER
-        // ==================================
-
-        const response =
-            await fetch(
-                AI_WORKER_URL,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        messages: messages
-                    })
-
-                }
-            );
-
-
-        let data;
-
-        try {
-
-            data =
-                await response.json();
-
-        } catch (error) {
-
-            throw new Error(
-                "Invalid response from AI server."
-            );
-
-        }
-
-
-        if (
-            !response.ok ||
-            !data.success
-        ) {
-
-            throw new Error(
-                data.error ||
-                "AI request failed."
-            );
-
-        }
-
-
-        const reply =
-            data.answer;
-
-
-        loadingWrapper.remove();
-
-
-        if (
-            !reply ||
-            !reply.trim()
-        ) {
-
-            throw new Error(
-                "AI returned an empty response."
-            );
-
-        }
-
-
-        addMessage(
-            reply.trim(),
-            "ai"
-        );
-
-
-        saveChat();
-
-
-    } catch (error) {
-
-        console.error(
-            "Aivora AI Error:",
-            error
-        );
-
-
-        loadingWrapper.remove();
-
-
-        let errorMessage =
-            "Sorry, AI response नहीं मिल पाया। कृपया फिर से try करें।";
-alert("Aivora Error: " + error.message);
-
-        if (
-            error.message &&
-            error.message.includes(
-                "GROQ_API_KEY"
-            )
-        ) {
-
-            errorMessage =
-                "AI server configuration error.";
-
-        }
-
-
-        addMessage(
-            errorMessage,
-            "ai"
-        );
-
-
-        saveChat();
-
-
-    } finally {
-
-        if (sendBtn) {
-
-            sendBtn.disabled =
-                false;
-
-        }
-
-        input.focus();
-
-    }
-
+    return button;
 }
 
 
 // ==========================================
-// SAVE CHAT
+// COPY FALLBACK
 // ==========================================
 
-function saveChat() {
+function fallbackCopy(text) {
 
-    if (!chatBox) return;
+    const textarea =
+        document.createElement("textarea");
 
-    const messages = [];
+    textarea.value = text;
 
+    textarea.style.position =
+        "fixed";
 
-    chatBox
-        .querySelectorAll(".message")
-        .forEach(message => {
+    textarea.style.opacity = "0";
 
-            if (
-                message.dataset.loading ===
-                "true"
-            ) {
-                return;
-            }
+    document.body.appendChild(
+        textarea
+    );
 
+    textarea.select();
 
-            messages.push({
+    try {
+        document.execCommand("copy");
+    } catch (error) {
+        console.error(
+            "Copy failed:",
+            error
+        );
+    }
 
-                text:
-                    message.textContent,
-
-                type:
-                    message.classList.contains(
-                        "user-message"
-                    )
-                        ? "user"
-                        : "ai"
-
-            });
-
-        });
+    textarea.remove();
+}
 
 
-    if (!messages.length) {
+// ==========================================
+// READ ALOUD
+// ==========================================
+
+function speakText(text) {
+
+    if (
+        !("speechSynthesis" in window)
+    ) {
+
+        alert(
+            "Read aloud browser mein supported nahi hai."
+        );
+
         return;
     }
 
 
-    localStorage.setItem(
-        HISTORY_KEY,
-        JSON.stringify(messages)
+    window.speechSynthesis.cancel();
+
+
+    const speech =
+        new SpeechSynthesisUtterance(
+            text
+        );
+
+
+    const language =
+        localStorage.getItem(
+            LANGUAGE_KEY
+        ) || "en";
+
+
+    speech.lang =
+        language === "hi"
+            ? "hi-IN"
+            : "en-US";
+
+
+    speech.rate = 1;
+
+    speech.pitch = 1;
+
+
+    window.speechSynthesis.speak(
+        speech
     );
-
-
-    let allChats = [];
-
-    try {
-
-        allChats =
-            JSON.parse(
-                localStorage.getItem(
-                    CHATS_KEY
-                )
-            ) || [];
-
-    } catch (error) {
-
-        allChats = [];
-
-    }
-
-
-    const firstUser =
-        messages.find(
-            message =>
-                message.type === "user"
-        );
-
-
-    const title =
-        firstUser
-            ? firstUser.text
-                .substring(0, 35)
-            : "New chat";
-
-
-    const chatData = {
-
-        id: currentChatId,
-
-        title: title,
-
-        messages: messages
-
-    };
-
-
-    const existingIndex =
-        allChats.findIndex(
-            chat =>
-                chat.id === currentChatId
-        );
-
-
-    if (existingIndex >= 0) {
-
-        allChats[existingIndex] =
-            chatData;
-
-    } else {
-
-        allChats.unshift(
-            chatData
-        );
-
-    }
-
-
-    localStorage.setItem(
-        CHATS_KEY,
-        JSON.stringify(allChats)
-    );
-
-
-    showRecentChat();
-
 }
 
 
 // ==========================================
-// LOAD CHAT
+// REGENERATE
 // ==========================================
 
-function loadChat() {
+async function regenerateLastResponse() {
 
-    const saved =
-        localStorage.getItem(
-            HISTORY_KEY
-        );
-
-    if (!saved) return;
-
-
-    try {
-
-        const messages =
-            JSON.parse(saved);
-
-
-        if (
-            messages.length > 0 &&
-            welcome
-        ) {
-
-            welcome.style.display =
-                "none";
-
-        }
-
-
-        messages.forEach(
-            message => {
-
-                addMessage(
-                    message.text,
-                    message.type
-                );
-
-            }
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "History error:",
-            error
-        );
-
+    if (!isLoggedIn()) {
+        openAuth();
+        return;
     }
 
+    if (!chatBox) return;
+
+
+    const messages =
+        Array.from(
+            chatBox.querySelectorAll(
+                ".message"
+            )
+        );
+
+
+    let lastUserMessage = null;
+
+    for (
+        let i = messages.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        if (
+            messages[i].classList.contains(
+                "user-message"
+            )
+        ) {
+
+            lastUserMessage =
+                messages[i];
+
+            break;
+        }
+    }
+
+
+    if (!lastUserMessage) {
+        return;
+    }
+
+
+    const content =
+        lastUserMessage.querySelector(
+            ".message-content"
+        );
+
+
+    if (!content) return;
+
+
+    const text =
+        content.textContent.trim();
+
+
+    // Remove all assistant messages after
+    // last user message
+    let current =
+        lastUserMessage.parentElement?.nextElementSibling;
+
+
+    while (current) {
+
+        const next =
+            current.nextElementSibling;
+
+        const isAssistant =
+            current.querySelector(
+                ".assistant-message"
+            );
+
+        if (isAssistant) {
+            current.remove();
+        }
+
+        current = next;
+    }
+
+
+    // Temporarily put text into input
+    if (messageInput) {
+        messageInput.value = text;
+    }
+
+
+    // Remove last user message
+    // so duplicate user message is not created
+    if (
+        lastUserMessage.parentElement
+    ) {
+        lastUserMessage.parentElement.remove();
+    }
+
+
+    saveChat();
+
+    await sendMessage();
 }
 
 
@@ -1776,9 +1158,10 @@ function loadChat() {
 // NEW CHAT
 // ==========================================
 
-function createNewChat() {
+function newChat() {
 
     saveChat();
+
 
     currentChatId =
         Date.now().toString();
@@ -1790,238 +1173,152 @@ function createNewChat() {
 
 
     if (welcome) {
-        welcome.style.display =
-            "block";
+        welcome.classList.remove(
+            "hidden"
+        );
     }
 
 
-    if (input) {
-
-        input.value = "";
-        input.focus();
-
+    if (messageInput) {
+        messageInput.value = "";
+        autoResizeTextarea();
+        messageInput.focus();
     }
 
 
     if (chatSidebar) {
-
         chatSidebar.classList.remove(
             "open"
         );
-
     }
-
-
-    showRecentChat();
-
-}
-
-
-if (newChatBtn) {
-
-    newChatBtn.addEventListener(
-        "click",
-        createNewChat
-    );
-
-}
-
-
-if (sidebarNewChatBtn) {
-
-    sidebarNewChatBtn.addEventListener(
-        "click",
-        createNewChat
-    );
-
 }
 
 
 // ==========================================
-// SEND BUTTON
+// NEW CHAT BUTTON
 // ==========================================
 
-if (sendBtn) {
-
-    sendBtn.addEventListener(
-        "click",
-        function () {
-
-            sendMessage();
-
-        }
-    );
-
-}
+on(
+    sidebarNewChatBtn,
+    "click",
+    newChat
+);
 
 
 // ==========================================
-// ENTER KEY
+// SIDEBAR
 // ==========================================
 
-if (input) {
+on(
+    menuBtn,
+    "click",
+    function () {
 
-    input.addEventListener(
-        "keydown",
-        function (event) {
+        if (!chatSidebar) return;
 
-            if (
-                event.key === "Enter" &&
-                !event.shiftKey
-            ) {
-
-                event.preventDefault();
-
-                sendMessage();
-
-            }
-
-        }
-    );
-
-}
-
-
-// ==========================================
-// SUGGESTIONS
-// ==========================================
-
-const suggestions =
-    document.querySelectorAll(
-        ".suggestions button"
-    );
-
-
-suggestions.forEach(
-    button => {
-
-        button.addEventListener(
-            "click",
-            function () {
-
-                const text =
-                    button.textContent
-                        .trim();
-
-
-                const prompts = {
-
-                    "Explain something":
-                        "Mujhe koi interesting topic simple Hindi mein samjhao.",
-
-                    "Help me learn":
-                        "Mujhe ek useful topic step-by-step sikhao.",
-
-                    "Write something":
-                        "Mere liye ek interesting short paragraph likho.",
-
-                    "Help with coding":
-                        "Mujhe coding ka ek useful concept simple example ke saath samjhao."
-
-                };
-
-
-                input.value =
-                    prompts[text] || text;
-
-                input.focus();
-
-            }
+        chatSidebar.classList.toggle(
+            "open"
         );
-
     }
 );
 
 
 // ==========================================
-// VOICE INPUT
+// SIDEBAR PROFILE
 // ==========================================
 
-const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+on(
+    sidebarProfileBtn,
+    "click",
+    function () {
 
+        const user =
+            getLoggedInUser();
 
-if (
-    SpeechRecognition &&
-    voiceBtn
-) {
+        if (!user) {
 
-    recognition =
-        new SpeechRecognition();
+            openAuth();
 
-    recognition.lang =
-        "hi-IN";
-
-    recognition.continuous =
-        false;
-
-    recognition.interimResults =
-        false;
-
-
-    voiceBtn.addEventListener(
-        "click",
-        function () {
-
-            try {
-
-                recognition.start();
-
-            } catch (error) {
-
-                console.log(
-                    "Voice already running"
-                );
-
-            }
-
+            return;
         }
+
+        const name =
+            user.name ||
+            "User";
+
+        alert(
+            "Logged in as:\n" +
+            name +
+            "\n" +
+            (user.email || "")
+        );
+    }
+);
+
+
+// ==========================================
+// SETTINGS
+// ==========================================
+
+function openSettings() {
+
+    if (!settingsOverlay) return;
+
+    settingsOverlay.classList.add(
+        "show"
     );
-
-
-    recognition.onresult =
-        function (event) {
-
-            const text =
-                event.results[0][0]
-                    .transcript;
-
-            input.value = text;
-
-            input.focus();
-
-        };
-
-
-    recognition.onerror =
-        function (event) {
-
-            console.log(
-                "Voice error:",
-                event.error
-            );
-
-        };
-
-} else if (voiceBtn) {
-
-    voiceBtn.addEventListener(
-        "click",
-        function () {
-
-            alert(
-                "इस browser में Voice Input supported नहीं है।"
-            );
-
-        }
-    );
-
 }
 
 
+function closeSettings() {
+
+    if (!settingsOverlay) return;
+
+    settingsOverlay.classList.remove(
+        "show"
+    );
+}
+
+
+on(
+    sidebarSettingsBtn,
+    "click",
+    function () {
+
+        if (chatSidebar) {
+            chatSidebar.classList.remove(
+                "open"
+            );
+        }
+
+        openSettings();
+    }
+);
+
+
+on(
+    closeSettingsBtn,
+    "click",
+    closeSettings
+);
+
+
+on(
+    settingsOverlay,
+    "click",
+    function (event) {
+
+        if (
+            event.target === settingsOverlay
+        ) {
+            closeSettings();
+        }
+    }
+);
+
+
 // ==========================================
-// DARK MODE
+// THEME
 // ==========================================
 
 function applyTheme() {
@@ -2029,738 +1326,206 @@ function applyTheme() {
     const theme =
         localStorage.getItem(
             THEME_KEY
-        );
-
-
-    const dark =
-        theme === "dark";
+        ) || "light";
 
 
     document.body.classList.toggle(
         "dark-mode",
-        dark
+        theme === "dark"
     );
 
+
+    if (settingsThemeBtn) {
+
+        settingsThemeBtn.setAttribute(
+            "aria-pressed",
+            theme === "dark"
+                ? "true"
+                : "false"
+        );
+    }
 }
 
 
 function toggleTheme() {
 
-    const dark =
-        !document.body.classList.contains(
-            "dark-mode"
-        );
+    const current =
+        localStorage.getItem(
+            THEME_KEY
+        ) || "light";
+
+
+    const next =
+        current === "dark"
+            ? "light"
+            : "dark";
 
 
     localStorage.setItem(
         THEME_KEY,
-        dark
-            ? "dark"
-            : "light"
+        next
     );
 
 
     applyTheme();
-
 }
 
 
-if (themeBtn) {
-
-    themeBtn.addEventListener(
-        "click",
-        toggleTheme
-    );
-
-}
-
-
-if (settingsThemeBtn) {
-
-    settingsThemeBtn.addEventListener(
-        "click",
-        toggleTheme
-    );
-
-}
-
-
-// ==========================================
-// SETTINGS
-// ==========================================
-
-if (settingsBtn) {
-
-    settingsBtn.addEventListener(
-        "click",
-        function () {
-
-            if (settingsOverlay) {
-
-                settingsOverlay.classList.add(
-                    "show"
-                );
-
-            }
-
-        }
-    );
-
-}
-
-
-if (sidebarSettingsBtn) {
-
-    sidebarSettingsBtn.addEventListener(
-        "click",
-        function () {
-
-            if (chatSidebar) {
-
-                chatSidebar.classList.remove(
-                    "open"
-                );
-
-            }
-
-            if (settingsOverlay) {
-
-                settingsOverlay.classList.add(
-                    "show"
-                );
-
-            }
-
-        }
-    );
-
-}
-
-
-if (closeSettingsBtn) {
-
-    closeSettingsBtn.addEventListener(
-        "click",
-        function () {
-
-            settingsOverlay.classList.remove(
-                "show"
-            );
-
-        }
-    );
-
-}
-
-
-if (settingsOverlay) {
-
-    settingsOverlay.addEventListener(
-        "click",
-        function (event) {
-
-            if (
-                event.target ===
-                settingsOverlay
-            ) {
-
-                settingsOverlay
-                    .classList
-                    .remove("show");
-
-            }
-
-        }
-    );
-
-}
+on(
+    settingsThemeBtn,
+    "click",
+    toggleTheme
+);
 
 
 // ==========================================
 // LANGUAGE
 // ==========================================
 
-if (languageSelect) {
+function loadLanguage() {
 
-    const savedLanguage =
+    const language =
         localStorage.getItem(
             LANGUAGE_KEY
-        );
+        ) || "en";
 
 
-    if (savedLanguage) {
-
+    if (languageSelect) {
         languageSelect.value =
-            savedLanguage;
-
+            language;
     }
-
-
-    languageSelect.addEventListener(
-        "change",
-        function () {
-
-            localStorage.setItem(
-                LANGUAGE_KEY,
-                languageSelect.value
-            );
-
-        }
-    );
-
 }
 
 
-// ==========================================
-// SEARCH
-// ==========================================
+on(
+    languageSelect,
+    "change",
+    function () {
 
-if (
-    searchBtn &&
-    searchBox
-) {
-
-    searchBtn.addEventListener(
-        "click",
-        function () {
-
-            searchBox.classList.add(
-                "show"
-            );
-
-            if (searchInput) {
-
-                searchInput.value = "";
-                searchInput.focus();
-
-            }
-
-        }
-    );
-
-}
-
-
-if (closeSearchBtn) {
-
-    closeSearchBtn.addEventListener(
-        "click",
-        function () {
-
-            searchBox.classList.remove(
-                "show"
-            );
-
-            searchInput.value = "";
-
-
-            chatBox
-                .querySelectorAll(
-                    ".message-wrapper"
-                )
-                .forEach(
-                    wrapper => {
-
-                        wrapper.style.display =
-                            "";
-
-                    }
-                );
-
-        }
-    );
-
-}
-
-
-if (searchInput) {
-
-    searchInput.addEventListener(
-        "input",
-        function () {
-
-            const query =
-                searchInput.value
-                    .trim()
-                    .toLowerCase();
-
-
-            chatBox
-                .querySelectorAll(
-                    ".message-wrapper"
-                )
-                .forEach(
-                    wrapper => {
-
-                        const text =
-                            wrapper.textContent
-                                .toLowerCase();
-
-
-                        wrapper.style.display =
-                            !query ||
-                            text.includes(query)
-                                ? ""
-                                : "none";
-
-                    }
-                );
-
-        }
-    );
-
-}
+        localStorage.setItem(
+            LANGUAGE_KEY,
+            languageSelect.value
+        );
+    }
+);
 
 
 // ==========================================
-// IMAGE UPLOAD
+// CLEAR ALL CHATS
 // ==========================================
 
-if (
-    attachBtn &&
-    fileInput
-) {
+on(
+    clearChatBtn,
+    "click",
+    function () {
 
-    attachBtn.addEventListener(
-        "click",
-        function () {
-
-            fileInput.click();
-
-        }
-    );
-
-
-    fileInput.addEventListener(
-        "change",
-        function () {
-
-            const file =
-                fileInput.files[0];
-
-            if (!file) return;
-
-
-            if (
-                file.type.startsWith(
-                    "image/"
-                )
-            ) {
-
-                const reader =
-                    new FileReader();
-
-
-                reader.onload =
-                    function (event) {
-
-                        const wrapper =
-                            document.createElement(
-                                "div"
-                            );
-
-                        wrapper.className =
-                            "image-message-wrapper";
-
-
-                        const image =
-                            document.createElement(
-                                "img"
-                            );
-
-                        image.src =
-                            event.target.result;
-
-                        image.className =
-                            "chat-image";
-
-
-                        wrapper.appendChild(
-                            image
-                        );
-
-                        chatBox.appendChild(
-                            wrapper
-                        );
-
-                        wrapper.scrollIntoView({
-                            behavior: "smooth",
-                            block: "end"
-                        });
-
-                    };
-
-
-                reader.readAsDataURL(
-                    file
-                );
-
-            } else {
-
-                addMessage(
-                    file.name,
-                    "user"
-                );
-
-                saveChat();
-
-            }
-
-
-            fileInput.value = "";
-
-        }
-    );
-
-}
-
-
-// ==========================================
-// CLEAR CHAT
-// ==========================================
-
-if (clearChatBtn) {
-
-    clearChatBtn.addEventListener(
-        "click",
-        function () {
-
-            const confirmClear =
-                confirm(
-                    "क्या आप पूरी chat history हटाना चाहते हैं?"
-                );
-
-
-            if (!confirmClear) {
-                return;
-            }
-
-
-            if (chatBox) {
-
-                chatBox.innerHTML =
-                    "";
-
-            }
-
-
-            localStorage.removeItem(
-                HISTORY_KEY
+        const confirmed =
+            confirm(
+                "Kya aap sabhi saved chats delete karna chahte hain?"
             );
 
 
-            localStorage.removeItem(
-                CHATS_KEY
-            );
-
-
-            if (welcome) {
-
-                welcome.style.display =
-                    "block";
-
-            }
-
-
-            showRecentChat();
-
+        if (!confirmed) {
+            return;
         }
-    );
-
-}
 
 
-// ==========================================
-// PROFILE
-// ==========================================
+        localStorage.removeItem(
+            HISTORY_KEY
+        );
 
-function loadProfile() {
-
-    const savedName =
-        localStorage.getItem(
-            PROFILE_NAME_KEY
+        localStorage.removeItem(
+            CHATS_KEY
         );
 
 
-    const savedImage =
-        localStorage.getItem(
-            PROFILE_IMAGE_KEY
-        );
+        currentChatId =
+            Date.now().toString();
 
 
-    if (
-        savedName &&
-        profileName
-    ) {
-
-        profileName.value =
-            savedName;
-
-    }
+        if (chatBox) {
+            chatBox.innerHTML = "";
+        }
 
 
-    if (
-        savedImage &&
-        profileAvatar
-    ) {
-
-        profileAvatar.style.backgroundImage =
-            `url(${savedImage})`;
-
-        profileAvatar.textContent =
-            "";
-
-    } else if (
-        savedName &&
-        profileAvatar
-    ) {
-
-        profileAvatar.textContent =
-            savedName
-                .charAt(0)
-                .toUpperCase();
-
-    }
-
-}
-
-
-function openProfile() {
-
-    if (chatSidebar) {
-
-        chatSidebar.classList.remove(
-            "open"
-        );
-
-    }
-
-
-    if (profileOverlay) {
-
-        profileOverlay.classList.add(
-            "show"
-        );
-
-    }
-
-
-    loadProfile();
-
-}
-
-
-if (profileBtn) {
-
-    profileBtn.addEventListener(
-        "click",
-        openProfile
-    );
-
-}
-
-
-if (sidebarProfileBtn) {
-
-    sidebarProfileBtn.addEventListener(
-        "click",
-        openProfile
-    );
-
-}
-
-
-if (closeProfileBtn) {
-
-    closeProfileBtn.addEventListener(
-        "click",
-        function () {
-
-            profileOverlay.classList.remove(
-                "show"
+        if (welcome) {
+            welcome.classList.remove(
+                "hidden"
             );
-
         }
-    );
-
-}
 
 
-if (changePhotoBtn) {
+        showRecentChats();
 
-    changePhotoBtn.addEventListener(
-        "click",
-        function () {
-
-            profileImageInput.click();
-
-        }
-    );
-
-}
+        closeSettings();
+    }
+);
 
 
-if (profileImageInput) {
+// ==========================================
+// SAVE CHAT
+// ==========================================
 
-    profileImageInput.addEventListener(
-        "change",
-        function () {
+function saveChat() {
 
-            const file =
-                profileImageInput.files[0];
-
-            if (!file) return;
+    if (!chatBox) return;
 
 
-            if (
-                !file.type.startsWith(
-                    "image/"
-                )
-            ) {
+    const messages = [];
 
-                alert(
-                    "कृपया image चुनें।"
+
+    chatBox
+        .querySelectorAll(".message")
+        .forEach((message) => {
+
+            const content =
+                message.querySelector(
+                    ".message-content"
                 );
 
-                return;
-
-            }
+            if (!content) return;
 
 
-            const reader =
-                new FileReader();
+            const text =
+                content.textContent.trim();
 
 
-            reader.onload =
-                function (event) {
-
-                    const image =
-                        event.target.result;
+            if (!text) return;
 
 
-                    profileAvatar
-                        .style
-                        .backgroundImage =
-                            `url(${image})`;
+            messages.push({
+
+                role:
+                    message.classList.contains(
+                        "user-message"
+                    )
+                        ? "user"
+                        : "assistant",
+
+                content: text
+            });
+        });
 
 
-                    profileAvatar.textContent =
-                        "";
+    if (!messages.length) {
+        return;
+    }
 
 
-                    localStorage.setItem(
-                        PROFILE_IMAGE_KEY,
-                        image
-                    );
-
-                };
-
-
-            reader.readAsDataURL(
-                file
-            );
-
-        }
+    // Current chat
+    localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(messages)
     );
 
-}
 
-
-if (saveProfileBtn) {
-
-    saveProfileBtn.addEventListener(
-        "click",
-        function () {
-
-            const name =
-                profileName.value.trim();
-
-
-            if (!name) {
-
-                alert(
-                    "कृपया अपना नाम लिखें।"
-                );
-
-                return;
-
-            }
-
-
-            localStorage.setItem(
-                PROFILE_NAME_KEY,
-                name
-            );
-
-
-            if (
-                !localStorage.getItem(
-                    PROFILE_IMAGE_KEY
-                )
-            ) {
-
-                profileAvatar.textContent =
-                    name
-                        .charAt(0)
-                        .toUpperCase();
-
-            }
-
-
-            profileOverlay
-                .classList
-                .remove("show");
-
-        }
-    );
-
-}
-
-
-
-
-// ==========================================
-// SIDEBAR
-// ==========================================
-
-if (
-    menuBtn &&
-    chatSidebar
-) {
-
-    menuBtn.addEventListener(
-        "click",
-        function () {
-
-            chatSidebar.classList.toggle(
-                "open"
-            );
-
-        }
-    );
-
-}
-
-
-// ==========================================
-// RECENT CHATS
-// ==========================================
-
-function showRecentChat() {
-
-    if (!chatHistory) return;
-
-
-    chatHistory.innerHTML =
-        "";
-
-
-    let allChats = [];
+    // All chats
+    let chats = [];
 
 
     try {
 
-        allChats =
+        chats =
             JSON.parse(
                 localStorage.getItem(
                     CHATS_KEY
@@ -2769,17 +1534,111 @@ function showRecentChat() {
 
     } catch (error) {
 
-        console.error(
-            "Chat history error:",
-            error
-        );
-
+        chats = [];
     }
 
 
-    if (
-        allChats.length === 0
-    ) {
+    const existingIndex =
+        chats.findIndex(
+            chat =>
+                chat.id === currentChatId
+        );
+
+
+    const firstUserMessage =
+        messages.find(
+            message =>
+                message.role === "user"
+        );
+
+
+    const title =
+        firstUserMessage
+            ? firstUserMessage.content
+                .slice(0, 40)
+            : "New chat";
+
+
+    const chatData = {
+
+        id: currentChatId,
+
+        title: title,
+
+        messages: messages,
+
+        updatedAt:
+            Date.now()
+    };
+
+
+    if (existingIndex >= 0) {
+
+        chats[existingIndex] =
+            chatData;
+
+    } else {
+
+        chats.unshift(
+            chatData
+        );
+    }
+
+
+    // Latest first
+    chats.sort(
+        (a, b) =>
+            b.updatedAt -
+            a.updatedAt
+    );
+
+
+    // Keep last 50 chats
+    chats =
+        chats.slice(0, 50);
+
+
+    localStorage.setItem(
+        CHATS_KEY,
+        JSON.stringify(chats)
+    );
+
+
+    showRecentChats();
+}
+
+
+// ==========================================
+// SHOW RECENT CHATS
+// ==========================================
+
+function showRecentChats() {
+
+    if (!chatHistory) return;
+
+
+    chatHistory.innerHTML = "";
+
+
+    let chats = [];
+
+
+    try {
+
+        chats =
+            JSON.parse(
+                localStorage.getItem(
+                    CHATS_KEY
+                )
+            ) || [];
+
+    } catch (error) {
+
+        chats = [];
+    }
+
+
+    if (!chats.length) {
 
         const empty =
             document.createElement(
@@ -2790,322 +1649,648 @@ function showRecentChat() {
             "empty-history";
 
         empty.textContent =
-            "No chats yet";
+            "No recent chats";
 
         chatHistory.appendChild(
             empty
         );
 
         return;
-
     }
 
 
-    allChats.forEach(
-        chat => {
+    chats.forEach(
+        (chat) => {
 
-            const chatItem =
+            const button =
                 document.createElement(
                     "button"
                 );
 
-
-            chatItem.type =
+            button.type =
                 "button";
 
+            button.className =
+                "chat-history-item";
 
-            chatItem.className =
-                "history-item";
 
-
-            chatItem.textContent =
+            button.textContent =
                 chat.title ||
                 "New chat";
 
 
-            chatItem.addEventListener(
+            on(
+                button,
                 "click",
                 function () {
 
-                    currentChatId =
-                        chat.id;
-
-
-                    chatBox.innerHTML =
-                        "";
-
-
-                    if (welcome) {
-
-                        welcome.style.display =
-                            "none";
-
-                    }
-
-
-                    chat.messages.forEach(
-                        message => {
-
-                            addMessage(
-                                message.text,
-                                message.type
-                            );
-
-                        }
+                    loadChat(
+                        chat.id
                     );
-
-
-                    localStorage.setItem(
-                        HISTORY_KEY,
-                        JSON.stringify(
-                            chat.messages
-                        )
-                    );
-
 
                     if (chatSidebar) {
-
-                        chatSidebar
-                            .classList
-                            .remove("open");
-
+                        chatSidebar.classList.remove(
+                            "open"
+                        );
                     }
-
                 }
             );
 
 
             chatHistory.appendChild(
-                chatItem
+                button
             );
-
         }
     );
-
 }
 
 
 // ==========================================
-// START AIVORA
+// LOAD CHAT
 // ==========================================
 
-applyTheme();
+function loadChat(chatId) {
 
-loadProfile();
-
-loadChat();
-
-showRecentChat();
-
-if (input) {
-    input.focus();
-}
+    let chats = [];
 
 
+    try {
 
-                    {
-                        method: "POST",
+        chats =
+            JSON.parse(
+                localStorage.getItem(
+                    CHATS_KEY
+                )
+            ) || [];
 
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
+    } catch (error) {
 
-                        body: JSON.stringify({
-                            email,
-                            password
-                        })
-                    }
+        chats = [];
+    }
+
+
+    const chat =
+        chats.find(
+            item =>
+                item.id === chatId
+        );
+
+
+    if (!chat) return;
+
+
+    currentChatId =
+        chat.id;
+
+
+    if (chatBox) {
+        chatBox.innerHTML = "";
+    }
+
+
+    if (welcome) {
+        welcome.classList.add(
+            "hidden"
+        );
+    }
+
+
+    if (
+        Array.isArray(
+            chat.messages
+        )
+    ) {
+
+        chat.messages.forEach(
+            message => {
+
+                addMessage(
+                    message.content,
+                    message.role === "user"
                 );
-
-
-            const data =
-                await response.json();
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    data.error ||
-                    data.message ||
-                    "Invalid email or password."
-                );
-
             }
+        );
+    }
 
 
-            /*
-             * Save logged-in user
-             */
-
-            currentUser = {
-
-                id:
-                    data.user?.id ||
-                    data.id ||
-                    null,
-
-                name:
-                    data.user?.name ||
-                    data.name ||
-                    email.split("@")[0],
-
-                email:
-                    data.user?.email ||
-                    data.email ||
-                    email
-
-            };
+    localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(
+            chat.messages || []
+        )
+    );
+}
 
 
-            localStorage.setItem(
-                "aivora_user",
-                JSON.stringify(currentUser)
+// ==========================================
+// LOAD CURRENT HISTORY
+// ==========================================
+
+function loadCurrentHistory() {
+
+    if (!chatBox) return;
+
+
+    let messages = [];
+
+
+    try {
+
+        messages =
+            JSON.parse(
+                localStorage.getItem(
+                    HISTORY_KEY
+                )
+            ) || [];
+
+    } catch (error) {
+
+        messages = [];
+    }
+
+
+    if (!messages.length) {
+        return;
+    }
+
+
+    if (welcome) {
+        welcome.classList.add(
+            "hidden"
+        );
+    }
+
+
+    messages.forEach(
+        message => {
+
+            addMessage(
+                message.content,
+                message.role === "user"
+            );
+        }
+    );
+}
+
+
+// ==========================================
+// ATTACH FILE
+// ==========================================
+
+on(
+    attachBtn,
+    "click",
+    function () {
+
+        if (fileInput) {
+            fileInput.click();
+        }
+    }
+);
+
+
+on(
+    fileInput,
+    "change",
+    function () {
+
+        const file =
+            fileInput.files?.[0];
+
+
+        if (!file) {
+            return;
+        }
+
+
+        // Image
+        if (
+            file.type.startsWith(
+                "image/"
+            )
+        ) {
+
+            showAttachedImage(
+                file
             );
 
+        } else {
 
-            showAuthMessage(
-                loginMessage,
-                "Login successful.",
-                "success"
+            addMessage(
+                "Attached file: " +
+                file.name,
+                true
             );
 
+            saveChat();
+        }
 
-            /*
-             * Close after successful login
-             */
 
-            setTimeout(
-                closeAuth,
-                500
+        fileInput.value = "";
+    }
+);
+
+
+// ==========================================
+// SHOW ATTACHED IMAGE
+// ==========================================
+
+function showAttachedImage(file) {
+
+    if (!chatBox) return;
+
+
+    const wrapper =
+        document.createElement(
+            "div"
+        );
+
+    wrapper.className =
+        "message-wrapper user-wrapper";
+
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+    message.className =
+        "message user-message";
+
+
+    const image =
+        document.createElement(
+            "img"
+        );
+
+
+    image.style.maxWidth =
+        "280px";
+
+    image.style.maxHeight =
+        "280px";
+
+    image.style.borderRadius =
+        "12px";
+
+    image.style.display =
+        "block";
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function (event) {
+
+            image.src =
+                event.target.result;
+        };
+
+
+    reader.readAsDataURL(
+        file
+    );
+
+
+    message.appendChild(
+        image
+    );
+
+    wrapper.appendChild(
+        message
+    );
+
+    chatBox.appendChild(
+        wrapper
+    );
+
+
+    chatBox.scrollTop =
+        chatBox.scrollHeight;
+}
+
+
+// ==========================================
+// VOICE INPUT
+// ==========================================
+
+let recognition = null;
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+if (SpeechRecognition) {
+
+    recognition =
+        new SpeechRecognition();
+
+
+    recognition.continuous =
+        false;
+
+    recognition.interimResults =
+        false;
+
+
+    recognition.onstart =
+        function () {
+
+            if (voiceBtn) {
+                voiceBtn.classList.add(
+                    "active"
+                );
+            }
+        };
+
+
+    recognition.onend =
+        function () {
+
+            if (voiceBtn) {
+                voiceBtn.classList.remove(
+                    "active"
+                );
+            }
+        };
+
+
+    recognition.onerror =
+        function (event) {
+
+            console.error(
+                "Voice error:",
+                event.error
+            );
+        };
+
+
+    recognition.onresult =
+        function (event) {
+
+            const transcript =
+                event.results[0][0]
+                    .transcript;
+
+
+            if (messageInput) {
+
+                messageInput.value +=
+                    (
+                        messageInput.value
+                            ? " "
+                            : ""
+                    ) +
+                    transcript;
+
+
+                autoResizeTextarea();
+            }
+        };
+}
+
+
+on(
+    voiceBtn,
+    "click",
+    function () {
+
+        if (!recognition) {
+
+            alert(
+                "Voice input is not supported in this browser."
             );
 
+            return;
+        }
 
-            updateAuthUI();
 
+        const language =
+            localStorage.getItem(
+                LANGUAGE_KEY
+            ) || "en";
+
+
+        recognition.lang =
+            language === "hi"
+                ? "hi-IN"
+                : "en-IN";
+
+
+        try {
+
+            recognition.start();
 
         } catch (error) {
 
-            showAuthMessage(
-                loginMessage,
-                error.message ||
-                "Login failed.",
-                "error"
+            console.log(
+                "Voice already running."
             );
-
-        } finally {
-
-            button.disabled = false;
-
-            button.textContent =
-                "Login";
-
         }
-
     }
 );
 
 
-/* ================================ */
-/* MESSAGE HELPER */
-/* ================================ */
+// ==========================================
+// SVG ICONS
+// ==========================================
 
-function showAuthMessage(
-    element,
-    message,
-    type
+function getCopyIcon() {
+
+    return `
+        <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <rect
+                x="9"
+                y="9"
+                width="13"
+                height="13"
+                rx="2"
+            ></rect>
+
+            <path
+                d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+            ></path>
+        </svg>
+    `;
+}
+
+
+function getLikeIcon() {
+
+    return `
+        <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path
+                d="M7 10v12"
+            ></path>
+
+            <path
+                d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h3.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"
+            ></path>
+        </svg>
+    `;
+}
+
+
+function getDislikeIcon() {
+
+    return `
+        <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path
+                d="M17 14V2"
+            ></path>
+
+            <path
+                d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3.76a2 2 0 0 0-1.79 1.11L12 22h0a3.13 3.13 0 0 1-3-3.88Z"
+            ></path>
+        </svg>
+    `;
+}
+
+
+function getVolumeIcon() {
+
+    return `
+        <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <polygon
+                points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"
+            ></polygon>
+
+            <path
+                d="M19.07 4.93a10 10 0 0 1 0 14.14"
+            ></path>
+
+            <path
+                d="M15.54 8.46a5 5 0 0 1 0 7.07"
+            ></path>
+        </svg>
+    `;
+}
+
+
+function getRefreshIcon() {
+
+    return `
+        <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <polyline
+                points="23 4 23 10 17 10"
+            ></polyline>
+
+            <polyline
+                points="1 20 1 14 7 14"
+            ></polyline>
+
+            <path
+                d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"
+            ></path>
+
+            <path
+                d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"
+            ></path>
+        </svg>
+    `;
+}
+
+
+// ==========================================
+// INITIALIZE APP
+// ==========================================
+
+function initializeApp() {
+
+    applyTheme();
+
+    loadLanguage();
+
+    loadCurrentHistory();
+
+    showRecentChats();
+
+    autoResizeTextarea();
+
+
+    // If user is already logged in,
+    // no login popup is opened.
+    const user =
+        getLoggedInUser();
+
+    if (user) {
+
+        console.log(
+            "Aivora user:",
+            user.email || user.name
+        );
+    }
+
+
+    console.log(
+        "Aivora AI initialized successfully."
+    );
+}
+
+
+// ==========================================
+// START
+// ==========================================
+
+if (
+    document.readyState ===
+    "loading"
 ) {
 
-    element.textContent = message;
-
-    element.className =
-        "auth-message " + type;
-
-}
-
-
-/* ================================ */
-/* CHECK LOGIN BEFORE CHAT */
-/* ================================ */
-
-function requireLogin() {
-
-    if (currentUser) {
-
-        return true;
-
-    }
-
-
-    openAuth();
-
-    return false;
-
-}
-
-
-/* ================================ */
-/* LOGOUT */
-/* ================================ */
-
-function logoutAivora() {
-
-    localStorage.removeItem(
-        "aivora_user"
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeApp
     );
 
-    currentUser = null;
+} else {
 
-    updateAuthUI();
-
+    initializeApp();
 }
-
-
-/* ================================ */
-/* UPDATE PROFILE UI */
-/* ================================ */
-
-function updateAuthUI() {
-
-    const profileName =
-        document.getElementById(
-            "profileName"
-        );
-
-    if (!profileName) return;
-
-
-    if (currentUser) {
-
-        profileName.textContent =
-            currentUser.name;
-
-    } else {
-
-        profileName.textContent =
-            "Login";
-
-    }
-
-}
-
-
-/* ================================ */
-/* INITIAL CHECK */
-/* ================================ */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        currentUser =
-            JSON.parse(
-                localStorage.getItem(
-                    "aivora_user"
-                )
-            ) || null;
-
-        updateAuthUI();
-
-    }
-);
